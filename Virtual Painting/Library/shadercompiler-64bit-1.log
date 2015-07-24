@@ -1,0 +1,51 @@
+Base path: C:/Program Files/Unity/Editor/Data
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-1-5020
+Cmd: getPlatforms
+Cmd: compileSnippet
+  api=4 type=0 insize=2805 outsize=2533 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2805 outsize=697 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=5995 outsize=4077 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=5995 outsize=1363 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=5928 outsize=3801 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=5928 outsize=1648 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=2996 outsize=2484 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2996 outsize=1314 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=4037 outsize=3914 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=4037 outsize=1566 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=6408 outsize=4077 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=6408 outsize=1566 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=7382 outsize=4719 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=7382 outsize=2704 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=4022 outsize=4597 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=4022 outsize=1412 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=2913 outsize=2533 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=2913 outsize=697 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=6253 outsize=4166 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=6253 outsize=1566 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=6163 outsize=3890 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=6163 outsize=1851 kw=LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF HDR_LIGHT_PREPASS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=3231 outsize=2574 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=3231 outsize=2379 kw= ok=1
