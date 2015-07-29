@@ -11,10 +11,12 @@ public class Instantiation : MonoBehaviour
 	HandController leap;
 	HandModel[] hands;
 	Controller controller;
+	bool isCloneGenerationActive;
+	
 	//Rigidbody clone;
 	
-	void Start ()
-	{
+	void Start () {
+		isCloneGenerationActive = false;
 		leap = GetComponent<HandController> ();
 		controller = leap.GetLeapController ();
 
@@ -28,7 +30,8 @@ public class Instantiation : MonoBehaviour
 	void Update ()
 	{
 		HandModel[] hands = leap.GetAllGraphicsHands ();
-		GestureRecognition (hands);
+		//GestureRecognition (hands);
+		ifBothHandsDetected(hands);
 	}
 
 	void CreateClones (HandModel[] hands)
@@ -63,35 +66,55 @@ public class Instantiation : MonoBehaviour
 		}
 	}
 
-	void GestureRecognition (HandModel[] hands)
-	{
+	void GestureRecognition (HandModel[] hands) {
 		Frame frame = controller.Frame ();
 		GestureList gesturesInFrame = frame.Gestures ();
-		bool CloneGenerationActive = false;
-
-		for (int i = 0; i <= gesturesInFrame.Count; i++) {
-			Gesture gesture = gesturesInFrame [i];
-			
-			if (gesture.Type == Gesture.GestureType.TYPE_SCREEN_TAP) {
-				ScreenTapGesture screentapGesture = new ScreenTapGesture (gesture);
-				Debug.Log ("scrtap");
-				if (CloneGenerationActive) {
-					CloneGenerationActive = false;
-				} else if (CloneGenerationActive == false) {
-					CloneGenerationActive = true;
-				} else {
-					Debug.Log ("what condition is this?");
+		
+		do{
+			print ("loopStart");
+			print("gesturesInFrame.Count "+gesturesInFrame.Count);
+			for (int i = 0; i < gesturesInFrame.Count%2; i++) {	
+				Gesture gesture = gesturesInFrame [i];
+				if (gesture.Type == Gesture.GestureType.TYPE_SCREEN_TAP) {
+					//ScreenTapGesture screentapGesture = new ScreenTapGesture (gesture);
+					Debug.Log ("scrtap");
+					if (isCloneGenerationActive) {
+						print ("screentapDetected"+isCloneGenerationActive); 
+						isCloneGenerationActive = false;
+					} else if (isCloneGenerationActive == false) {
+						isCloneGenerationActive = true;
+						print ("screentapDetected"+isCloneGenerationActive); 
+					} else {
+						Debug.Log ("what condition is this?");
+					}
+				} else if (gesture.Type == Gesture.GestureType.TYPE_INVALID) {
+					print ("invalid");
 				}
-			} else if (gesture.Type == Gesture.GestureType.TYPE_INVALID) {
-				print ("invalid");
+				print (i+" of "+gesturesInFrame.Count);
 			}
+			print ("loopover");
+			
+			if (isCloneGenerationActive) {
+				print ("CreateClonesCalled");
+				CreateClones (hands);
+				print ("willGenerateClones");
+			} else {
+				print ("CreateClonesNOTCalled");
+			}
+			print ("finalloopend"+isCloneGenerationActive);
+		} while(isCloneGenerationActive);
+		print ("wloopover"+isCloneGenerationActive);
+	}
+
+	void ifBothHandsDetected(HandModel[] hands){
+		if(hands.Length==2){
+			CreateClones(hands);
+			print (hands.Length+"hands detected");
+		} else if(hands.Length==1){
+			print (hands.Length +"hands detected");
+		} else{
+			print ("ERROR");
+			print (hands.Length +"hands detected");
 		}
-		if (CloneGenerationActive) {
-			CreateClones (hands);
-			print ("CreateClonesCalled");
-		} else {
-			print ("CreateClonesNOTCalled");
-		}
-		print ("called");
 	}
 }
