@@ -19,6 +19,7 @@ public class Instantiation : MonoBehaviour
 	List<Vector3> vertices;
 	List<int> triangles;
 	List<Vector2> uvCoords;
+	Material meshMat;
 
 	//Rigidbody clone;
 	
@@ -33,7 +34,8 @@ public class Instantiation : MonoBehaviour
 		controller.Config.SetFloat ("Gesture.ScreenTap.MinDistance", 1.0f);
 		controller.Config.Save ();
 
-		mFilter = GetComponent<MeshFilter>();
+		mFilter = GameObject.FindGameObjectWithTag("MeshHere").GetComponent<MeshFilter>();
+		//mFilter = GameObject.FindGameObjectWithTag("MeshHere").GetComponent<MeshFilter>();
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
 		uvCoords = new List<Vector2>();
@@ -41,61 +43,55 @@ public class Instantiation : MonoBehaviour
 	
 	void Update () {
 		frame = controller.Frame ();
-		HandModel[] hands = leap.GetAllGraphicsHands ();
-		DynamicMeshGenerator(hands);
+		hands = leap.GetAllGraphicsHands ();
+		if(hands.Length>0){
+			DynamicMeshGenerator(hands);
+		}
 	}
 
 	void DynamicMeshGenerator(HandModel[] hands){
-		Finger indexF = frame.Hands [0].Fingers [(int)Finger.FingerType.TYPE_INDEX];
-		Finger thumbF = frame.Hands [0].Fingers [(int)Finger.FingerType.TYPE_THUMB];
-		Vector3 indexFPos = indexF.TipPosition.ToUnityScaled ();
-		Vector3 thumbFPos = thumbF.TipPosition.ToUnityScaled ();
-		Vector3 palmPos = hands [0].GetPalmPosition ();
 
-		vertices.Add(palmPos);
-		uvCoords.Add(new Vector2(0f, 0f));
+		Vector3 indexFPos = hands[0].fingers[(int)Finger.FingerType.TYPE_INDEX].GetTipPosition();
+		Vector3 thumbFPos = hands[0].fingers[(int)Finger.FingerType.TYPE_THUMB].GetTipPosition();
+		//Finger indexF = frame.Hands [0].Fingers [(int)Finger.FingerType.TYPE_INDEX];
+		//Finger thumbF = frame.Hands [0].Fingers [(int)Finger.FingerType.TYPE_THUMB];
+		//Vector3 indexFPos = Camera.main.transform.TransformPoint (leap.transform.TransformPoint(indexF.TipPosition.ToUnityScaled ()));
+		//Vector3 thumbFPos = Camera.main.transform.TransformPoint (leap.transform.TransformPoint(thumbF.TipPosition.ToUnityScaled ()));
+		print ("IP"+indexFPos);
+		print ("TP"+thumbFPos);
+		print("gho"+hands[0].GetHandOffset());
 		vertices.Add(indexFPos);
-		uvCoords.Add(new Vector2(0f, 0f));
+		uvCoords.Add(new Vector2(0f, 0.0f));
 		vertices.Add(thumbFPos);
-		uvCoords.Add(new Vector2(0f, 0f));
+		uvCoords.Add(new Vector2(0f, 1f));
 
+		
 		if(vertices.Count>3){
-			int a = vertices.Count-6;
-			int b = vertices.Count-5;
-			int c = vertices.Count-4;
-			int d = vertices.Count-3;
-			int e = vertices.Count-2;
-			int f = vertices.Count-1;
-			int g =e-b;
-			print("e-b"+g);
+			int a = vertices.Count-4;
+			int b = vertices.Count-3;
+			int c = vertices.Count-2;
+			int d = vertices.Count-1;
+			print ("vertice count "+vertices.Count);
 
-			print (vertices.Count);
-			if(g==3){
-				triangles.Add (a);
-				triangles.Add (b);
-				triangles.Add (d);
-				print ("triangle at ("+a+", "+b+", "+d+")");
-				
-				triangles.Add (b);
-				triangles.Add (e);
-				triangles.Add (d);
-				print ("triangle at "+b+e+d);
-				
-				triangles.Add (b);
-				triangles.Add (f);
-				triangles.Add (e);
-				print ("triangle at "+b+f+e);
-				
-				triangles.Add (b);
-				triangles.Add (c);
-				triangles.Add (f);
-				print ("triangle at "+b+c+f);
-			}else {
-				print ("g is less than 9");
-			}
+			triangles.Add (a);
+			triangles.Add (d);
+			triangles.Add (c);
+			triangles.Add (c);
+			triangles.Add (d);
+			triangles.Add (a);
+			print ("triangle at ("+a+", "+d+", "+c+")");
+			
+			triangles.Add (a);
+			triangles.Add (b);
+			triangles.Add (d);
+			triangles.Add (d);
+			triangles.Add (b);
+			triangles.Add (a);
+			print ("triangle at "+a+b+d);
 		} else {
 			print ("condition fails");
 		}
+
 
 		Mesh dynaMesh = new Mesh();
 		dynaMesh.vertices = vertices.ToArray();
@@ -113,28 +109,25 @@ public class Instantiation : MonoBehaviour
 			print (hands.Length +"hands detected");
 		} else{
 			print ("ERROR");
-			print (hands.Length +"hands detected");
+			print (hands.Length +" hands detected");
 		}
 	}
 
-	//----------------------------------------------------------------------
-
-	//purge/fix the following
 	void CreateClones (HandModel[] hands){
-
+		
 		GameObject[] clones = GameObject.FindGameObjectsWithTag ("Clone");
 		if (clones.Length < limiter) {
 			for (int i=0; i<=clones.Length; i++) {
 				//!!!!GETS POSITION OF FIRST HAND!!!!!
 				Vector3 position = hands [0].GetPalmPosition ();
-
+				
 				if (i != 0) {
 					Debug.Log ("i!=0");
 					if (
-					    (clones [i].transform.position.x <= clones [i - 1].transform.position.x * boxSeparation) &&
+						(clones [i].transform.position.x <= clones [i - 1].transform.position.x * boxSeparation) &&
 						(clones [i].transform.position.y <= clones [i - 1].transform.position.y * boxSeparation) &&
 						(clones [i].transform.position.z <= clones [i - 1].transform.position.z * boxSeparation)
-					    ) {
+						) {
 						Debug.Log ("Shouldn't work");
 					}
 				} else {
@@ -150,6 +143,10 @@ public class Instantiation : MonoBehaviour
 			}
 		}
 	}
+
+	//----------------------------------------------------------------------
+
+	//purge/fix the following
 
 	void GestureRecognition (HandModel[] hands) {
 		GestureList gesturesInFrame = frame.Gestures ();
