@@ -15,11 +15,15 @@ public class Instantiation : MonoBehaviour
 	bool isCloneGenerationActive;
 	Frame frame;
 
+	Mesh dynaMesh;
 	MeshFilter mFilter;
+	MeshRenderer meshRenderer;
 	List<Vector3> vertices;
 	List<int> triangles;
 	List<Vector2> uvCoords;
-	Material meshMat;
+	int whereInTheMesh;
+	bool handsInLastFrame;
+	public Material mat;
 
 	//Rigidbody clone;
 	
@@ -34,18 +38,54 @@ public class Instantiation : MonoBehaviour
 		controller.Config.SetFloat ("Gesture.ScreenTap.MinDistance", 1.0f);
 		controller.Config.Save ();
 
+		dynaMesh = new Mesh();
+		dynaMesh.subMeshCount = 1;
 		mFilter = GameObject.FindGameObjectWithTag("MeshHere").GetComponent<MeshFilter>();
-		//mFilter = GameObject.FindGameObjectWithTag("MeshHere").GetComponent<MeshFilter>();
+		meshRenderer = GameObject.FindGameObjectWithTag("MeshHere").GetComponent<MeshRenderer>();
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
 		uvCoords = new List<Vector2>();
+		whereInTheMesh = 0;
+		handsInLastFrame = false;
 	}
 	
 	void Update () {
 		frame = controller.Frame ();
 		hands = leap.GetAllGraphicsHands ();
 		if(hands.Length>0){
+			handsInLastFrame = true;
+			//onBothHandsDetected(hands);
 			DynamicMeshGenerator(hands);
+		} else{
+			noHandsWhatToDo();
+		}
+	}
+
+	void onBothHandsDetected(HandModel[] hands){
+		if(hands.Length==2){
+			DynamicMeshGenerator(hands);
+			print("boolean is"+ handsInLastFrame);
+		} else if(hands.Length==1){
+			print (hands.Length +"hands detected");
+		} else{
+			print ("ERROR");
+			print (hands.Length +" hands detected");
+		}
+	}
+
+	void noHandsWhatToDo(){
+		if (handsInLastFrame == true) {
+			print("FROM T bool is"+ handsInLastFrame);
+			
+			triangles.Clear();
+			whereInTheMesh=0;
+			dynaMesh.subMeshCount++;
+			handsInLastFrame =false;
+			Material[] mats = new Material[dynaMesh.subMeshCount];
+			for(int i=0; i < mats.Length; i++){
+				mats[i] = mat;
+			}
+			meshRenderer.materials = mats;
 		}
 	}
 
@@ -53,25 +93,18 @@ public class Instantiation : MonoBehaviour
 
 		Vector3 indexFPos = hands[0].fingers[(int)Finger.FingerType.TYPE_INDEX].GetTipPosition();
 		Vector3 thumbFPos = hands[0].fingers[(int)Finger.FingerType.TYPE_THUMB].GetTipPosition();
-		//Finger indexF = frame.Hands [0].Fingers [(int)Finger.FingerType.TYPE_INDEX];
-		//Finger thumbF = frame.Hands [0].Fingers [(int)Finger.FingerType.TYPE_THUMB];
-		//Vector3 indexFPos = Camera.main.transform.TransformPoint (leap.transform.TransformPoint(indexF.TipPosition.ToUnityScaled ()));
-		//Vector3 thumbFPos = Camera.main.transform.TransformPoint (leap.transform.TransformPoint(thumbF.TipPosition.ToUnityScaled ()));
-		print ("IP"+indexFPos);
-		print ("TP"+thumbFPos);
-		print("gho"+hands[0].GetHandOffset());
-		vertices.Add(indexFPos);
+
+		vertices.Add(indexFPos); whereInTheMesh++;
 		uvCoords.Add(new Vector2(0f, 0.0f));
-		vertices.Add(thumbFPos);
+		vertices.Add(thumbFPos); whereInTheMesh++;
 		uvCoords.Add(new Vector2(0f, 1f));
 
 		
-		if(vertices.Count>3){
+		if(vertices.Count>3 && whereInTheMesh >3){
 			int a = vertices.Count-4;
 			int b = vertices.Count-3;
 			int c = vertices.Count-2;
 			int d = vertices.Count-1;
-			print ("vertice count "+vertices.Count);
 
 			triangles.Add (a);
 			triangles.Add (d);
@@ -87,32 +120,24 @@ public class Instantiation : MonoBehaviour
 			triangles.Add (d);
 			triangles.Add (b);
 			triangles.Add (a);
-			print ("triangle at "+a+b+d);
 		} else {
-			print ("condition fails");
+			print ("no triangles made");
 		}
 
-
-		Mesh dynaMesh = new Mesh();
 		dynaMesh.vertices = vertices.ToArray();
-		dynaMesh.triangles = triangles.ToArray();
+		print ("dmc"+dynaMesh.subMeshCount);
+		dynaMesh.SetTriangles(triangles.ToArray(), dynaMesh.subMeshCount-1);
+		int z= dynaMesh.subMeshCount-1;
+		print ("dm-1"+z);
+		//dynaMesh.triangles = triangles.ToArray();
 		dynaMesh.uv = uvCoords.ToArray();
 		mFilter.mesh = dynaMesh;
 
 	}
 
-	void onBothHandsDetected(HandModel[] hands){
-		if(hands.Length==2){
-			CreateClones(hands);
-			print (hands.Length+"hands detected");
-		} else if(hands.Length==1){
-			print (hands.Length +"hands detected");
-		} else{
-			print ("ERROR");
-			print (hands.Length +" hands detected");
-		}
-	}
 
+
+	//Used For CubeClones. Unused.
 	void CreateClones (HandModel[] hands){
 		
 		GameObject[] clones = GameObject.FindGameObjectsWithTag ("Clone");
