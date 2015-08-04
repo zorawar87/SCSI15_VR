@@ -121,6 +121,8 @@ public class Instantiation : MonoBehaviour{
 		dynaMesh.SetTriangles(triangles.ToArray(), dynaMesh.subMeshCount-1);
 		dynaMesh.uv = uvCoords.ToArray();
 		mFilter.mesh = dynaMesh;
+		dynaMesh.RecalculateNormals();
+		dynaMesh.RecalculateBounds();
 	}
 
 	//----Unused---
