@@ -45,7 +45,7 @@ public class Instantiation : MonoBehaviour{
 	void Update () {
 		frame = controller.Frame ();
 		hands = leap.GetAllGraphicsHands ();
-		if(hands.Length>0){
+		if(hands.Length==2){
 			handsInLastFrame = true;
 			onBothHandsDetected(hands);
 			//DynamicMeshGenerator(hands);
@@ -121,8 +121,6 @@ public class Instantiation : MonoBehaviour{
 		dynaMesh.SetTriangles(triangles.ToArray(), dynaMesh.subMeshCount-1);
 		dynaMesh.uv = uvCoords.ToArray();
 		mFilter.mesh = dynaMesh;
-		dynaMesh.RecalculateNormals();
-		dynaMesh.RecalculateBounds();
 	}
 
 	//----Unused---
